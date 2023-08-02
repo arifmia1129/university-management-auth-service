@@ -2,7 +2,7 @@ import { HydratedDocument, Model } from 'mongoose'
 
 export type IUser = {
   id: string
-  role: string
+  role: 'student' | 'admin' | 'faculty'
   password: string
 }
 
