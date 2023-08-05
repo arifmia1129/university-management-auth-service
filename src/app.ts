@@ -1,17 +1,28 @@
-import express, { Application, Request, Response } from 'express';
-import cors from 'cors';
+import express, { Application, Request, Response } from 'express'
+import cors from 'cors'
+import userRouter from './app/modules/user/user.router'
+import globalErrorHandler from './app/middleware/globalErrorHandler'
 
-const app: Application = express();
+const app: Application = express()
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+// parse
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
-app.get('/', (req: Request, res: Response) => {
+// cors
+app.use(cors())
+
+// router
+app.use('/api/v1/user', userRouter)
+
+app.get('/', async (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: 'Server is running successfully',
-  });
-});
+  })
+})
 
-export default app;
+// global error handler
+app.use(globalErrorHandler)
+
+export default app
