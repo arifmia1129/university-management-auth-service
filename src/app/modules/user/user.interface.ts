@@ -11,7 +11,6 @@ export type IUserMethods = {
 }
 
 export type UserModel = {
-  createWithFullName(
-    name: string,
-  ): Promise<HydratedDocument<IUser, IUserMethods>>
+  createWithFullName(): Promise<HydratedDocument<IUser, IUserMethods>>
+  // name: string,
 } & Model<IUser, object, IUserMethods>
