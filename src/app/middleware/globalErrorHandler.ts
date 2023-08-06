@@ -45,6 +45,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
 
   res.status(statusCode).json({
+    statusCode,
     success: false,
     message,
     errorMessages,

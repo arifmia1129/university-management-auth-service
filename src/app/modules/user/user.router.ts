@@ -1,14 +1,14 @@
-import { Router } from 'express'
-import * as userController from './user.controller'
-import * as userValidation from './user.validation'
-import requestValidator from '../../middleware/requestValidator'
+import { Router } from "express";
+import * as userController from "./user.controller";
+import * as userValidation from "./user.validation";
+import requestValidator from "../../middleware/requestValidator";
 
-const router = Router()
+const userRouter = Router();
 
-router.post(
-  '/create-user',
+userRouter.post(
+  "/create-user",
   requestValidator(userValidation.createUserValidation),
   userController.createUser,
-)
+);
 
-export default router
+export default userRouter;

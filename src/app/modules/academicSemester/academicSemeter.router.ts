@@ -3,12 +3,12 @@ import * as academicSemesterValidation from "./academicSemester.validation";
 import requestValidator from "../../middleware/requestValidator";
 import * as academicSemesterController from "./academicSemester.controller";
 
-const router = Router();
+const academicSemesterRouter = Router();
 
-router.post(
+academicSemesterRouter.post(
   "/create",
   requestValidator(academicSemesterValidation.createAcademicSemesterValidation),
   academicSemesterController.createSemester,
 );
 
-export default router;
+export default academicSemesterRouter;

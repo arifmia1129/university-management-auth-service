@@ -26,3 +26,9 @@ export const academicSemesterMonth: AcademicSemesterMonth[] = [
   "November",
   "December",
 ];
+
+export const academicSemesterTitleWithCode: { [key: string]: string } = {
+  Autumn: "01",
+  Summer: "02",
+  Fall: "03",
+};
