@@ -1,8 +1,8 @@
-import { z } from 'zod'
+import { z } from "zod";
 
 export const createUserValidation = z.object({
-  role: z.string({
-    required_error: 'Role is required',
+  role: z.enum(["student", "admin", "faculty"], {
+    required_error: "Role is required",
   }),
   password: z.string().optional(),
-})
+});
