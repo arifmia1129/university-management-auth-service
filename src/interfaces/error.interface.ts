@@ -1,4 +1,4 @@
 export type ErrorMessage = {
-  path: string
-  message: string
-}
+  path: string | number;
+  message: string;
+};
