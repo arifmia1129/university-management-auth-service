@@ -10,5 +10,6 @@ academicSemesterRouter.post(
   requestValidator(academicSemesterValidation.createAcademicSemesterValidation),
   academicSemesterController.createSemester,
 );
+academicSemesterRouter.get("/", academicSemesterController.getSemester);
 
 export default academicSemesterRouter;

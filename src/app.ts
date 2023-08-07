@@ -1,7 +1,8 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import globalErrorHandler from "./app/middleware/globalErrorHandler";
 import router from "./app/routes";
+import httpStatus from "./shared/httpStatus";
 
 const app: Application = express();
 
@@ -24,5 +25,21 @@ app.get("/", async (req: Request, res: Response) => {
 
 // global error handler
 app.use(globalErrorHandler);
+
+// handle page not found error
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(httpStatus.NOT_FOUND).json({
+    statusCode: httpStatus.NOT_FOUND,
+    success: false,
+    message: "Api not found",
+    errorMessages: [
+      {
+        path: req.originalUrl,
+        message: "Request api path not found",
+      },
+    ],
+  });
+  next();
+});
 
 export default app;
