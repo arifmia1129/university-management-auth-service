@@ -11,5 +11,6 @@ academicSemesterRouter.post(
   academicSemesterController.createSemester,
 );
 academicSemesterRouter.get("/", academicSemesterController.getSemester);
+academicSemesterRouter.get("/:id", academicSemesterController.getSemesterById);
 
 export default academicSemesterRouter;

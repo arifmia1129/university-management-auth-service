@@ -13,3 +13,7 @@ export type ResponseWithPagination<T> = {
   };
   data: T;
 };
+
+export type Search = {
+  searchTerm?: string;
+};
