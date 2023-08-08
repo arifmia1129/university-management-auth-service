@@ -63,3 +63,21 @@ export const getSemesterById = catchAsync(
     next();
   },
 );
+
+export const updateSemesterById = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const result = await academicSemesterService.updateSemesterByIdService(
+      id,
+      req.body,
+    );
+    sendResponse<IAcademicSemester>(res, {
+      statusCode: 200,
+      success: true,
+      message: "Successfully updated semester",
+      data: result,
+    });
+
+    next();
+  },
+);

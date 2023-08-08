@@ -6,6 +6,7 @@ import ApiError from "../../errors/ApiError";
 import { errorLogger } from "../../shared/logger";
 import { ZodError } from "zod";
 import handleZodError from "../../errors/handleZodError";
+import handleCastError from "../../errors/handleCastError";
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // handle error logger
@@ -20,6 +21,10 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     errorMessages = handleValidationError(err);
     statusCode = 400;
     message = "Validation error";
+  } else if (err.name === "CastError") {
+    errorMessages = handleCastError(err);
+    statusCode = 400;
+    message = "Cast error";
   } else if (err instanceof ZodError) {
     errorMessages = handleZodError(err);
     statusCode = 400;

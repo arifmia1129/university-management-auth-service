@@ -86,3 +86,13 @@ export const getSemesterByIdService = async (
   const res = await AcademicSemester.findById(id);
   return res;
 };
+
+export const updateSemesterByIdService = async (
+  id: string,
+  payload: Partial<IAcademicSemester>,
+): Promise<IAcademicSemester | null> => {
+  const res = await AcademicSemester.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
+  return res;
+};
