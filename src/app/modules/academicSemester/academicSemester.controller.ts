@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import * as academicSemesterService from "./academicSemester.service";
 import { IAcademicSemester } from "./academicSemester.interface";
 import catchAsync from "../../../shared/catchAsync";
@@ -12,7 +12,7 @@ import { paginationField } from "../../constant/pagination";
 import { academicSemesterFilterableField } from "./academicSemester.constant";
 
 export const createSemester = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const result: IAcademicSemester | null =
       await academicSemesterService.createSemesterService(req.body);
 
@@ -22,35 +22,29 @@ export const createSemester = catchAsync(
       message: "Successfully created academic semester",
       data: result,
     });
-
-    next();
   },
 );
 
-export const getSemester = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const searchTerm: Search = pick(req.query, academicSemesterFilterableField);
-    const paginationOptions: Pagination = pick(req.query, paginationField);
+export const getSemester = catchAsync(async (req: Request, res: Response) => {
+  const searchTerm: Search = pick(req.query, academicSemesterFilterableField);
+  const paginationOptions: Pagination = pick(req.query, paginationField);
 
-    const result = await academicSemesterService.getSemesterService(
-      searchTerm,
-      paginationOptions,
-    );
+  const result = await academicSemesterService.getSemesterService(
+    searchTerm,
+    paginationOptions,
+  );
 
-    sendResponse<IAcademicSemester[]>(res, {
-      statusCode: 200,
-      success: true,
-      message: "Successfully get semester",
-      meta: result.meta,
-      data: result.data,
-    });
-
-    next();
-  },
-);
+  sendResponse<IAcademicSemester[]>(res, {
+    statusCode: 200,
+    success: true,
+    message: "Successfully get semester",
+    meta: result.meta,
+    data: result.data,
+  });
+});
 
 export const getSemesterById = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const { id } = req.params;
     const result = await academicSemesterService.getSemesterByIdService(id);
     sendResponse<IAcademicSemester>(res, {
@@ -59,13 +53,11 @@ export const getSemesterById = catchAsync(
       message: "Successfully get semester",
       data: result,
     });
-
-    next();
   },
 );
 
 export const updateSemesterById = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const { id } = req.params;
     const result = await academicSemesterService.updateSemesterByIdService(
       id,
@@ -77,7 +69,18 @@ export const updateSemesterById = catchAsync(
       message: "Successfully updated semester",
       data: result,
     });
+  },
+);
 
-    next();
+export const deleteSemesterById = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = await academicSemesterService.deleteSemesterByIdService(id);
+    sendResponse<IAcademicSemester>(res, {
+      statusCode: 200,
+      success: true,
+      message: "Successfully deleted semester",
+      data: result,
+    });
   },
 );

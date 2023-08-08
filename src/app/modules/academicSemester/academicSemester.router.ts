@@ -11,11 +11,15 @@ academicSemesterRouter.post(
   academicSemesterController.createSemester,
 );
 academicSemesterRouter.get("/", academicSemesterController.getSemester);
-academicSemesterRouter.get("/:id", academicSemesterController.getSemesterById);
-academicSemesterRouter.patch(
-  "/:id",
-  requestValidator(academicSemesterValidation.updateAcademicSemesterValidation),
-  academicSemesterController.updateSemesterById,
-);
+academicSemesterRouter
+  .route("/:id")
+  .get(academicSemesterController.getSemesterById)
+  .patch(
+    requestValidator(
+      academicSemesterValidation.updateAcademicSemesterValidation,
+    ),
+    academicSemesterController.updateSemesterById,
+  )
+  .delete(academicSemesterController.deleteSemesterById);
 
 export default academicSemesterRouter;

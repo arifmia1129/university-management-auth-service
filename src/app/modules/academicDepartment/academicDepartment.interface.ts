@@ -1,0 +1,18 @@
+import { HydratedDocument, Model, Types } from "mongoose";
+import { IAcademicFaculty } from "../academicFaculty/academicFaculty.interface";
+
+export type IAcademicDepartment = {
+  title: string;
+  academicFaculty: Types.ObjectId | IAcademicFaculty;
+};
+
+export type IAcademicDepartmentMethods = {
+  fullName(): string;
+};
+
+export type AcademicDepartmentModel = {
+  createWithFullName(): Promise<
+    HydratedDocument<IAcademicDepartment, IAcademicDepartmentMethods>
+  >;
+  // name: string,
+} & Model<IAcademicDepartment, object, IAcademicDepartmentMethods>;
