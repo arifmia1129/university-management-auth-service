@@ -91,6 +91,13 @@ export const updateSemesterByIdService = async (
   id: string,
   payload: Partial<IAcademicSemester>,
 ): Promise<IAcademicSemester | null> => {
+  if (
+    payload.title &&
+    payload.code &&
+    academicSemesterTitleWithCode[payload.title] !== payload.code
+  ) {
+    throw new ApiError("Invalid semester code", httpStatus.BAD_REQUEST);
+  }
   const res = await AcademicSemester.findOneAndUpdate({ _id: id }, payload, {
     new: true,
   });
