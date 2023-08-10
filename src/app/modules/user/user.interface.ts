@@ -6,6 +6,7 @@ export type IUser = {
   role: "student" | "admin" | "faculty";
   password: string;
   student: Types.ObjectId | IStudent;
+  faculty: Types.ObjectId | IStudent;
 };
 
 export type IUserMethods = {
