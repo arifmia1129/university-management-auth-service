@@ -36,3 +36,19 @@ export const generateFacultyId = async (): Promise<string> => {
 
   return `F-${currentId}`;
 };
+
+// generate admin id
+const getLastAdminId = async (): Promise<string | null> => {
+  const lastId = await User.findOne({ role: "admin" }, { id: 1, _id: 0 })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return lastId?.id ? lastId.id.substring(2) : "0";
+};
+
+export const generateAdminId = async (): Promise<string> => {
+  const lastId: string = (await getLastAdminId()) as string;
+  const currentId = (Number(lastId) + 1).toString().padStart(5, "0");
+
+  return `A-${currentId}`;
+};

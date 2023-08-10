@@ -17,4 +17,10 @@ userRouter.post(
   userController.createFaculty,
 );
 
+userRouter.post(
+  "/create-admin",
+  requestValidator(userValidation.createAdminValidation),
+  userController.createAdmin,
+);
+
 export default userRouter;

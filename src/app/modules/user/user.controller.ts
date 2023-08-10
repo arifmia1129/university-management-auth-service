@@ -29,3 +29,16 @@ export const createFaculty = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+export const createAdmin = catchAsync(async (req: Request, res: Response) => {
+  const { admin, ...userInfo } = req.body;
+
+  const result = await userService.createAdminService(admin, userInfo);
+
+  sendResponse<IUser>(res, {
+    statusCode: 201,
+    success: true,
+    message: "Successfully created admin",
+    data: result,
+  });
+});
