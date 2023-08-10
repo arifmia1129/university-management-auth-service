@@ -1,16 +1,18 @@
-import { HydratedDocument, Model } from 'mongoose'
+import { HydratedDocument, Model, Types } from "mongoose";
+import { IStudent } from "../student/student.interface";
 
 export type IUser = {
-  id: string
-  role: 'student' | 'admin' | 'faculty'
-  password: string
-}
+  id: string;
+  role: "student" | "admin" | "faculty";
+  password: string;
+  student: Types.ObjectId | IStudent;
+};
 
 export type IUserMethods = {
-  fullName(): string
-}
+  fullName(): string;
+};
 
 export type UserModel = {
-  createWithFullName(): Promise<HydratedDocument<IUser, IUserMethods>>
+  createWithFullName(): Promise<HydratedDocument<IUser, IUserMethods>>;
   // name: string,
-} & Model<IUser, object, IUserMethods>
+} & Model<IUser, object, IUserMethods>;

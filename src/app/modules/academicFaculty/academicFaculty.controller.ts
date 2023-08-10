@@ -5,7 +5,7 @@ import sendResponse from "../../../shared/sendResponse";
 import { IAcademicFaculty } from "./academicFaculty.interface";
 import {
   Pagination,
-  Search,
+  Filter,
 } from "../../../interfaces/databaseQuery.interface";
 import pick from "../../../shared/pick";
 import { academicFacultyFilterableField } from "./academicFaculty.constant";
@@ -23,11 +23,11 @@ export const createFaculty = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getFaculty = catchAsync(async (req: Request, res: Response) => {
-  const searchTerm: Search = pick(req.query, academicFacultyFilterableField);
+  const filterData: Filter = pick(req.query, academicFacultyFilterableField);
   const paginationOptions: Pagination = pick(req.query, paginationField);
 
   const result = await academicFacultyService.getFacultyService(
-    searchTerm,
+    filterData,
     paginationOptions,
   );
 

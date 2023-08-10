@@ -2,9 +2,9 @@ import { SortOrder } from "mongoose";
 import ApiError from "../../../errors/ApiError";
 import { paginationHelper } from "../../../helpers/paginationHelper";
 import {
+  Filter,
   Pagination,
   ResponseWithPagination,
-  Search,
 } from "../../../interfaces/databaseQuery.interface";
 import httpStatus from "../../../shared/httpStatus";
 import {
@@ -26,7 +26,7 @@ export const createSemesterService = async (
 };
 
 export const getSemesterService = async (
-  filters: Search,
+  filters: Filter,
   paginationOptions: Pagination,
 ): Promise<ResponseWithPagination<IAcademicSemester[]>> => {
   const { page, limit, skip, sortBy, sortOrder } =
@@ -68,7 +68,7 @@ export const getSemesterService = async (
     .skip(skip)
     .limit(limit);
 
-  const total = await AcademicSemester.countDocuments();
+  const total = await AcademicSemester.countDocuments(whereConditions);
 
   return {
     meta: {

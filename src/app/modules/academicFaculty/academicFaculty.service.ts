@@ -3,7 +3,7 @@ import { paginationHelper } from "../../../helpers/paginationHelper";
 import {
   Pagination,
   ResponseWithPagination,
-  Search,
+  Filter,
 } from "../../../interfaces/databaseQuery.interface";
 import { IAcademicFaculty } from "./academicFaculty.interface";
 import AcademicFaculty from "./academicFaculty.model";
@@ -16,7 +16,7 @@ export const createFacultyService = async (
 };
 
 export const getFacultyService = async (
-  filters: Search,
+  filters: Filter,
   paginationOptions: Pagination,
 ): Promise<ResponseWithPagination<IAcademicFaculty[]>> => {
   const { page, limit, skip, sortBy, sortOrder } =
@@ -58,7 +58,7 @@ export const getFacultyService = async (
     .skip(skip)
     .limit(limit);
 
-  const total = await AcademicFaculty.countDocuments();
+  const total = await AcademicFaculty.countDocuments(whereConditions);
 
   return {
     meta: {

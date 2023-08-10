@@ -3,7 +3,7 @@ import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import {
   Pagination,
-  Search,
+  Filter,
 } from "../../../interfaces/databaseQuery.interface";
 import pick from "../../../shared/pick";
 import * as academicDepartmentService from "./academicDepartment.service";
@@ -27,11 +27,11 @@ export const createDepartment = catchAsync(
 );
 
 export const getDepartment = catchAsync(async (req: Request, res: Response) => {
-  const searchTerm: Search = pick(req.query, academicDepartmentFilterableField);
+  const filterData: Filter = pick(req.query, academicDepartmentFilterableField);
   const paginationOptions: Pagination = pick(req.query, paginationField);
 
   const result = await academicDepartmentService.getDepartmentService(
-    searchTerm,
+    filterData,
     paginationOptions,
   );
 

@@ -1,3 +1,4 @@
+import { ParsedQs } from "qs";
 export type Pagination = {
   page?: number;
   limit?: number;
@@ -14,6 +15,8 @@ export type ResponseWithPagination<T> = {
   data: T;
 };
 
-export type Search = {
-  searchTerm?: string;
+type FilterValue = string | string[] | null | undefined | ParsedQs | ParsedQs[];
+
+export type Filter = {
+  [key: string]: FilterValue | FilterValue[];
 };

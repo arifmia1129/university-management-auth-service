@@ -6,9 +6,9 @@ import requestValidator from "../../middleware/requestValidator";
 const userRouter = Router();
 
 userRouter.post(
-  "/create-user",
-  requestValidator(userValidation.createUserValidation),
-  userController.createUser,
+  "/create-student",
+  requestValidator(userValidation.createStudentValidation),
+  userController.createStudent,
 );
 
 export default userRouter;

@@ -5,7 +5,7 @@ import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import {
   Pagination,
-  Search,
+  Filter,
 } from "../../../interfaces/databaseQuery.interface";
 import pick from "../../../shared/pick";
 import { paginationField } from "../../constant/pagination";
@@ -26,11 +26,11 @@ export const createSemester = catchAsync(
 );
 
 export const getSemester = catchAsync(async (req: Request, res: Response) => {
-  const searchTerm: Search = pick(req.query, academicSemesterFilterableField);
+  const filterData: Filter = pick(req.query, academicSemesterFilterableField);
   const paginationOptions: Pagination = pick(req.query, paginationField);
 
   const result = await academicSemesterService.getSemesterService(
-    searchTerm,
+    filterData,
     paginationOptions,
   );
 

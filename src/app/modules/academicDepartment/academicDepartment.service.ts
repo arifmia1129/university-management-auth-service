@@ -3,7 +3,7 @@ import { paginationHelper } from "../../../helpers/paginationHelper";
 import {
   Pagination,
   ResponseWithPagination,
-  Search,
+  Filter,
 } from "../../../interfaces/databaseQuery.interface";
 import { IAcademicDepartment } from "./academicDepartment.interface";
 import AcademicDepartment from "./academicDepartment.model";
@@ -18,7 +18,7 @@ export const createDepartmentService = async (
 };
 
 export const getDepartmentService = async (
-  filters: Search,
+  filters: Filter,
   paginationOptions: Pagination,
 ): Promise<ResponseWithPagination<IAcademicDepartment[]>> => {
   const { page, limit, skip, sortBy, sortOrder } =
@@ -61,7 +61,7 @@ export const getDepartmentService = async (
     .skip(skip)
     .limit(limit);
 
-  const total = await AcademicDepartment.countDocuments();
+  const total = await AcademicDepartment.countDocuments(whereConditions);
 
   return {
     meta: {

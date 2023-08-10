@@ -4,13 +4,15 @@ import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import { IUser } from "./user.interface";
 
-export const createUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await userService.createUserService(req.body);
+export const createStudent = catchAsync(async (req: Request, res: Response) => {
+  const { student, ...userInfo } = req.body;
+
+  const result = await userService.createStudentService(student, userInfo);
 
   sendResponse<IUser>(res, {
     statusCode: 201,
     success: true,
-    message: "Successfully created user",
+    message: "Successfully created student",
     data: result,
   });
 });
