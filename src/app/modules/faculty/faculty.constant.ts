@@ -6,6 +6,7 @@ export const facultySearchableField = [
   "contactNo",
   "emergencyContactNo",
   "email",
+  "designation",
 ];
 
 export const facultyFilterableField = [
@@ -13,4 +14,5 @@ export const facultyFilterableField = [
   "email",
   "contactNo",
   "emergencyContactNo",
+  "designation",
 ];

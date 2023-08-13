@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SortOrder } from "mongoose";
+import mongoose, { SortOrder } from "mongoose";
 import { paginationHelper } from "../../../helpers/paginationHelper";
 import {
   Filter,
@@ -12,6 +12,7 @@ import { IFaculty } from "./faculty.interface";
 import { facultySearchableField } from "./faculty.constant";
 import Faculty from "./faculty.model";
 import { Name } from "../student/student.interface";
+import User from "../user/user.model";
 
 export const getFacultyService = async (
   filters: Filter,
@@ -112,6 +113,39 @@ export const updateFacultyByIdService = async (
 export const deleteFacultyByIdService = async (
   id: string,
 ): Promise<IFaculty | null> => {
-  const res = await Faculty.findByIdAndDelete(id);
+  const session = await mongoose.startSession();
+
+  let res;
+
+  try {
+    session.startTransaction();
+    const faculty = await Faculty.findOneAndDelete({ id });
+
+    if (!faculty) {
+      throw new ApiError(
+        "Faculty delete operation is failed",
+        httpStatus.BAD_REQUEST,
+      );
+    }
+
+    res = faculty;
+
+    const user = await User.deleteOne({ id });
+
+    if (!user) {
+      throw new ApiError(
+        "User delete operation is failed",
+        httpStatus.BAD_REQUEST,
+      );
+    }
+
+    session.commitTransaction();
+    session.endSession();
+  } catch (error) {
+    session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
+
   return res;
 };

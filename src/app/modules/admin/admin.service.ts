@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SortOrder } from "mongoose";
+import mongoose, { SortOrder } from "mongoose";
 import { paginationHelper } from "../../../helpers/paginationHelper";
 import {
   Filter,
@@ -12,6 +12,7 @@ import { Name } from "../student/student.interface";
 import { IAdmin } from "./admin.interface";
 import { adminSearchableField } from "./admin.constant";
 import Admin from "./admin.model";
+import User from "../user/user.model";
 
 export const getAdminService = async (
   filters: Filter,
@@ -109,6 +110,38 @@ export const updateAdminByIdService = async (
 export const deleteAdminByIdService = async (
   id: string,
 ): Promise<IAdmin | null> => {
-  const res = await Admin.findByIdAndDelete(id);
+  const session = await mongoose.startSession();
+
+  let res;
+
+  try {
+    session.startTransaction();
+    const admin = await Admin.findOneAndDelete({ id });
+
+    if (!admin) {
+      throw new ApiError(
+        "Admin delete operation is failed",
+        httpStatus.BAD_REQUEST,
+      );
+    }
+
+    res = admin;
+
+    const user = await User.deleteOne({ id });
+
+    if (!user) {
+      throw new ApiError(
+        "User delete operation is failed",
+        httpStatus.BAD_REQUEST,
+      );
+    }
+
+    session.commitTransaction();
+    session.endSession();
+  } catch (error) {
+    session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
   return res;
 };

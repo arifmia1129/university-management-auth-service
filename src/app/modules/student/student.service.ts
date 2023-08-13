@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SortOrder } from "mongoose";
+import mongoose, { SortOrder } from "mongoose";
 import { paginationHelper } from "../../../helpers/paginationHelper";
 import {
   Filter,
@@ -11,6 +11,7 @@ import Student from "./student.model";
 import { studentSearchableField } from "./student.constant";
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "../../../shared/httpStatus";
+import User from "../user/user.model";
 
 export const getStudentService = async (
   filters: Filter,
@@ -162,6 +163,39 @@ export const updateStudentByIdService = async (
 export const deleteStudentByIdService = async (
   id: string,
 ): Promise<IStudent | null> => {
-  const res = await Student.findByIdAndDelete(id);
+  const session = await mongoose.startSession();
+
+  let res;
+
+  try {
+    session.startTransaction();
+    const student = await Student.findOneAndDelete({ id });
+
+    if (!student) {
+      throw new ApiError(
+        "Student delete operation is failed",
+        httpStatus.BAD_REQUEST,
+      );
+    }
+
+    res = student;
+
+    const user = await User.deleteOne({ id });
+
+    if (!user) {
+      throw new ApiError(
+        "User delete operation is failed",
+        httpStatus.BAD_REQUEST,
+      );
+    }
+
+    session.commitTransaction();
+    session.endSession();
+  } catch (error) {
+    session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
+
   return res;
 };
