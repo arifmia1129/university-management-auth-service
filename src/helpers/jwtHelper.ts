@@ -1,4 +1,6 @@
-import jwt, { Secret } from "jsonwebtoken";
+import jwt, { JwtPayload, Secret } from "jsonwebtoken";
+import httpStatus from "../shared/httpStatus";
+import ApiError from "../errors/ApiError";
 
 export const createToken = (
   payload: object,
@@ -9,4 +11,16 @@ export const createToken = (
     expiresIn: expireTime,
   });
   return token;
+};
+
+export const verifyAndDecodeToken = (
+  token: string,
+  secret: Secret,
+): JwtPayload => {
+  try {
+    const decodedToken = jwt.verify(token, secret) as JwtPayload;
+    return decodedToken;
+  } catch (error) {
+    throw new ApiError("Invalid token", httpStatus.FORBIDDEN);
+  }
 };

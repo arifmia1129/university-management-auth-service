@@ -2,7 +2,7 @@
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "../../../shared/httpStatus";
 import User from "../user/user.model";
-import { LoginCredential, LoginResponse } from "./auth.constant";
+import { LoginCredential, LoginResponse, RefreshToken } from "./auth.constant";
 import config from "../../../config";
 import * as jwtHelper from "../../../helpers/jwtHelper";
 import { Secret } from "jsonwebtoken";
@@ -51,5 +51,42 @@ export const loginAuthService = async (
     accessToken,
     refreshToken,
     needChangePassword,
+  };
+};
+
+export const refreshTokenAuthService = async (
+  token: string,
+): Promise<RefreshToken> => {
+  const verifiedToken = jwtHelper.verifyAndDecodeToken(
+    token,
+    config.jwt.refresh_secret as Secret,
+  );
+
+  const { userId, role } = verifiedToken;
+
+  const user = new User();
+
+  const isUserExist = await user.isUserExist(userId);
+
+  if (!isUserExist) {
+    throw new ApiError("User does not exist", httpStatus.FORBIDDEN);
+  }
+
+  if (!isUserExist?.password) {
+    throw new ApiError("Invalid user information.", httpStatus.BAD_REQUEST);
+  }
+
+  if (isUserExist.role !== role) {
+    throw new ApiError("User role is mismatched", httpStatus.FORBIDDEN);
+  }
+
+  const accessToken = jwtHelper.createToken(
+    { userId, role },
+    config.jwt.secret as Secret,
+    config.jwt.secret_expires_in as string,
+  );
+
+  return {
+    accessToken,
   };
 };

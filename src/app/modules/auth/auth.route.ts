@@ -11,4 +11,10 @@ authRouter.post(
   authController.loginAuth,
 );
 
+authRouter.post(
+  "/refresh-token",
+  requestValidator(authValidation.refreshTokenAuthValidation),
+  authController.refreshTokenAuth,
+);
+
 export default authRouter;
