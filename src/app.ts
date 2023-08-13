@@ -3,12 +3,14 @@ import cors from "cors";
 import globalErrorHandler from "./app/middleware/globalErrorHandler";
 import router from "./app/routes";
 import httpStatus from "./shared/httpStatus";
+import cookieParser from "cookie-parser";
 
 const app: Application = express();
 
 // parse
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // cors
 app.use(cors());
