@@ -21,6 +21,9 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
       minlength: 6,
       select: 0,
     },
+    changePasswordAt: {
+      type: Date,
+    },
     needChangePassword: {
       type: Boolean,
       default: true,

@@ -2,10 +2,16 @@
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "../../../shared/httpStatus";
 import User from "../user/user.model";
-import { LoginCredential, LoginResponse, RefreshToken } from "./auth.constant";
+import {
+  ChangePassword,
+  LoginCredential,
+  LoginResponse,
+  RefreshToken,
+} from "./auth.interface";
 import config from "../../../config";
 import * as jwtHelper from "../../../helpers/jwtHelper";
-import { Secret } from "jsonwebtoken";
+import { JwtPayload, Secret } from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 export const loginAuthService = async (
   payload: LoginCredential,
@@ -89,4 +95,48 @@ export const refreshTokenAuthService = async (
   return {
     accessToken,
   };
+};
+
+export const changePasswordAuthService = async (
+  userInfo: JwtPayload,
+  payload: ChangePassword,
+): Promise<void> => {
+  const { oldPassword, newPassword } = payload;
+  const { userId } = userInfo;
+
+  const user = new User();
+
+  const isUserExist = await user.isUserExist(userId);
+
+  if (!isUserExist) {
+    throw new ApiError("User not found", httpStatus.NOT_FOUND);
+  }
+
+  if (!isUserExist?.password) {
+    throw new ApiError("Invalid user information.", httpStatus.BAD_REQUEST);
+  }
+
+  const isPasswordMatched = await user.isPasswordMatched(
+    oldPassword,
+    isUserExist.password,
+  );
+
+  if (!isPasswordMatched) {
+    throw new ApiError("Invalid old Password", httpStatus.FORBIDDEN);
+  }
+
+  const newHashedPassword = await bcrypt.hash(
+    newPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
+
+  const updateInfo = {
+    password: newHashedPassword,
+    needChangePassword: false,
+    changePasswordAt: new Date(),
+  };
+
+  await User.findOneAndUpdate({ id: userId }, updateInfo, {
+    runValidators: true,
+  });
 };

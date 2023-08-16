@@ -1,38 +1,35 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import catchAsync from "../../../shared/catchAsync";
 import * as authService from "./auth.service";
 import httpStatus from "../../../shared/httpStatus";
 import sendResponse from "../../../shared/sendResponse";
-import { LoginResponse, RefreshToken } from "./auth.constant";
 import config from "../../../config";
+import { LoginResponse, RefreshToken } from "./auth.interface";
+import { JwtPayload } from "jsonwebtoken";
 
-export const loginAuth = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const result = await authService.loginAuthService(req.body);
+export const loginAuth = catchAsync(async (req: Request, res: Response) => {
+  const result = await authService.loginAuthService(req.body);
 
-    const { refreshToken, ...other } = result;
+  const { refreshToken, ...other } = result;
 
-    // set refresh token to cookie
-    const cookieOption = {
-      secret: config.env === "production",
-      httpOnly: true,
-    };
+  // set refresh token to cookie
+  const cookieOption = {
+    secret: config.env === "production",
+    httpOnly: true,
+  };
 
-    res.cookie("refreshToken", refreshToken, cookieOption);
+  res.cookie("refreshToken", refreshToken, cookieOption);
 
-    sendResponse<LoginResponse>(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Log in process done successfully",
-      data: other,
-    });
-
-    next();
-  },
-);
+  sendResponse<LoginResponse>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Log in process done successfully",
+    data: other,
+  });
+});
 
 export const refreshTokenAuth = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     const { refreshToken } = req.cookies;
 
     const result = await authService.refreshTokenAuthService(refreshToken);
@@ -53,7 +50,20 @@ export const refreshTokenAuth = catchAsync(
       message: "Refresh token process done successfully",
       data: result,
     });
+  },
+);
 
-    next();
+export const changePasswordAuth = catchAsync(
+  async (req: Request, res: Response) => {
+    await authService.changePasswordAuthService(
+      req.user as JwtPayload,
+      req.body,
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Password updated successfully",
+    });
   },
 );
