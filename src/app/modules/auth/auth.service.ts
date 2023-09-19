@@ -17,7 +17,6 @@ export const loginAuthService = async (
   payload: LoginCredential,
 ): Promise<LoginResponse> => {
   const { id, password } = payload;
-
   const user = new User();
 
   const isUserExist = await user.isUserExist(id);
