@@ -14,7 +14,6 @@ import handleMongoServerError from "../../errors/handleMongoServerError";
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   // handle error logger
   errorLogger.error(err);
-
   //default response
   let statusCode: number = 500;
   let message: string = "Something went wrong";

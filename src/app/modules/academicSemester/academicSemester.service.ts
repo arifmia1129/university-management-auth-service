@@ -11,7 +11,10 @@ import {
   academicSemesterSearchableField,
   academicSemesterTitleWithCode,
 } from "./academicSemester.constant";
-import { IAcademicSemester } from "./academicSemester.interface";
+import {
+  IAcademicSemester,
+  IAcademicSemesterFromEvent,
+} from "./academicSemester.interface";
 import AcademicSemester from "./academicSemester.model";
 
 export const createSemesterService = async (
@@ -23,6 +26,23 @@ export const createSemesterService = async (
 
   const res = await AcademicSemester.create(semester);
   return res;
+};
+export const createSemesterFromEventService = async (
+  event: IAcademicSemesterFromEvent,
+): Promise<void> => {
+  const eventData = {
+    year: event.year,
+    title: event.title,
+    code: event.code,
+    startMonth: event.startMonth,
+    endMonth: event.endMonth,
+    syncId: event.id,
+  };
+  if (academicSemesterTitleWithCode[eventData.title] !== eventData.code) {
+    throw new ApiError("Invalid semester code", httpStatus.BAD_REQUEST);
+  }
+
+  await AcademicSemester.create(eventData);
 };
 
 export const getSemesterService = async (
@@ -102,6 +122,25 @@ export const updateSemesterByIdService = async (
     new: true,
   });
   return res;
+};
+export const updateSemesterByEventService = async (
+  payload: Partial<IAcademicSemesterFromEvent>,
+): Promise<void> => {
+  if (
+    payload.title &&
+    payload.code &&
+    academicSemesterTitleWithCode[payload.title] !== payload.code
+  ) {
+    throw new ApiError("Invalid semester code", httpStatus.BAD_REQUEST);
+  }
+  await AcademicSemester.findOneAndUpdate({ syncId: payload?.id }, payload, {
+    new: true,
+  });
+};
+export const deleteSemesterByEventService = async (
+  payload: Partial<IAcademicSemesterFromEvent>,
+): Promise<void> => {
+  await AcademicSemester.findOneAndDelete({ syncId: payload?.id });
 };
 
 export const deleteSemesterByIdService = async (

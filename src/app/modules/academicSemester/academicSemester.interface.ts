@@ -23,6 +23,7 @@ export type IAcademicSemester = {
   code: AcademicSemesterCode;
   startMonth: AcademicSemesterMonth;
   endMonth: AcademicSemesterMonth;
+  syncId: string;
 };
 
 export type IAcademicSemesterMethods = {
@@ -35,3 +36,12 @@ export type AcademicSemesterModel = {
   >;
   // name: string,
 } & Model<IAcademicSemester, object, IAcademicSemesterMethods>;
+
+export type IAcademicSemesterFromEvent = {
+  title: AcademicSemesterTitle;
+  year: string;
+  code: AcademicSemesterCode;
+  startMonth: AcademicSemesterMonth;
+  endMonth: AcademicSemesterMonth;
+  id: string;
+};
