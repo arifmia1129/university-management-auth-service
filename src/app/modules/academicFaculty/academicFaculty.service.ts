@@ -5,7 +5,10 @@ import {
   ResponseWithPagination,
   Filter,
 } from "../../../interfaces/databaseQuery.interface";
-import { IAcademicFaculty } from "./academicFaculty.interface";
+import {
+  IAcademicFaculty,
+  IAcademicFacultyFromEvent,
+} from "./academicFaculty.interface";
 import AcademicFaculty from "./academicFaculty.model";
 import { academicFacultySearchableField } from "./academicFaculty.constant";
 
@@ -13,6 +16,17 @@ export const createFacultyService = async (
   faculty: IAcademicFaculty,
 ): Promise<IAcademicFaculty | null> => {
   return await AcademicFaculty.create(faculty);
+};
+
+export const createFacultyFromEventService = async (
+  event: IAcademicFacultyFromEvent,
+): Promise<void> => {
+  const eventData = {
+    title: event.title,
+    syncId: event.id,
+  };
+
+  await AcademicFaculty.create(eventData);
 };
 
 export const getFacultyService = async (
@@ -87,9 +101,24 @@ export const updateFacultyByIdService = async (
   return res;
 };
 
+export const updateFacultyByEventService = async (
+  payload: Partial<IAcademicFacultyFromEvent>,
+): Promise<void> => {
+  await AcademicFaculty.findOneAndUpdate({ syncId: payload?.id }, payload, {
+    new: true,
+  });
+};
+
 export const deleteFacultyByIdService = async (
   id: string,
 ): Promise<IAcademicFaculty | null> => {
   const res = await AcademicFaculty.findByIdAndDelete(id);
+
   return res;
+};
+
+export const deleteFacultyByEventService = async (
+  payload: Partial<IAcademicFacultyFromEvent>,
+): Promise<void> => {
+  await AcademicFaculty.findOneAndDelete({ syncId: payload?.id });
 };

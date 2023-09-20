@@ -16,3 +16,9 @@ export type AcademicDepartmentModel = {
   >;
   // name: string,
 } & Model<IAcademicDepartment, object, IAcademicDepartmentMethods>;
+
+export type IAcademicDepartmentFromEvent = {
+  title: string;
+  academicFaculty: Types.ObjectId | IAcademicFaculty;
+  id: string;
+};

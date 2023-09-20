@@ -2,6 +2,7 @@ import { HydratedDocument, Model } from "mongoose";
 
 export type IAcademicFaculty = {
   title: string;
+  syncId: string;
 };
 
 export type IAcademicFacultyMethods = {
@@ -14,3 +15,8 @@ export type AcademicFacultyModel = {
   >;
   // name: string,
 } & Model<IAcademicFaculty, object, IAcademicFacultyMethods>;
+
+export type IAcademicFacultyFromEvent = {
+  title: string;
+  id: string;
+};

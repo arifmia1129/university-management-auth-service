@@ -5,7 +5,10 @@ import {
   ResponseWithPagination,
   Filter,
 } from "../../../interfaces/databaseQuery.interface";
-import { IAcademicDepartment } from "./academicDepartment.interface";
+import {
+  IAcademicDepartment,
+  IAcademicDepartmentFromEvent,
+} from "./academicDepartment.interface";
 import AcademicDepartment from "./academicDepartment.model";
 import { academicDepartmentSearchableField } from "./academicDepartment.constant";
 
@@ -15,6 +18,18 @@ export const createDepartmentService = async (
   return (await AcademicDepartment.create(department)).populate(
     "academicFaculty",
   );
+};
+
+export const createDepartmentFromEventService = async (
+  event: IAcademicDepartmentFromEvent,
+): Promise<void> => {
+  const eventData = {
+    title: event.title,
+    academicFaculty: event.academicFaculty,
+    syncId: event.id,
+  };
+
+  await AcademicDepartment.create(eventData);
 };
 
 export const getDepartmentService = async (
