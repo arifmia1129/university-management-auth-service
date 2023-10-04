@@ -13,7 +13,7 @@ authRouter.post(
   authController.loginAuth,
 );
 
-authRouter.post(
+authRouter.get(
   "/refresh-token",
   requestValidator(authValidation.refreshTokenAuthValidation),
   authController.refreshTokenAuth,

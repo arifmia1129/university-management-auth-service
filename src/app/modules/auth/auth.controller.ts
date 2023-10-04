@@ -24,7 +24,7 @@ export const loginAuth = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Log in process done successfully",
-    data: other,
+    data: result,
   });
 });
 

@@ -9,10 +9,14 @@ import {
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "../../../shared/httpStatus";
 import { IFaculty } from "./faculty.interface";
-import { facultySearchableField } from "./faculty.constant";
+import {
+  EVENT_UPDATED_FACULTY,
+  facultySearchableField,
+} from "./faculty.constant";
 import Faculty from "./faculty.model";
 import { Name } from "../student/student.interface";
 import User from "../user/user.model";
+import { RedisClient } from "../../../shared/redis";
 
 export const getFacultyService = async (
   filters: Filter,
@@ -106,6 +110,10 @@ export const updateFacultyByIdService = async (
   const res = await Faculty.findOneAndUpdate({ _id: id }, updateInfo, {
     new: true,
   });
+
+  if (res) {
+    RedisClient.publish(EVENT_UPDATED_FACULTY, JSON.stringify(res));
+  }
 
   return res;
 };

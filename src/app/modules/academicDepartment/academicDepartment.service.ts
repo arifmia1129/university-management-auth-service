@@ -11,6 +11,7 @@ import {
 } from "./academicDepartment.interface";
 import AcademicDepartment from "./academicDepartment.model";
 import { academicDepartmentSearchableField } from "./academicDepartment.constant";
+import AcademicFaculty from "../academicFaculty/academicFaculty.model";
 
 export const createDepartmentService = async (
   department: IAcademicDepartment,
@@ -23,9 +24,13 @@ export const createDepartmentService = async (
 export const createDepartmentFromEventService = async (
   event: IAcademicDepartmentFromEvent,
 ): Promise<void> => {
+  const existFaculty = await AcademicFaculty.findOne({
+    syncId: event.academicFaculty,
+  });
+
   const eventData = {
     title: event.title,
-    academicFaculty: event.academicFaculty,
+    academicFaculty: existFaculty?._id,
     syncId: event.id,
   };
 
@@ -105,6 +110,14 @@ export const updateDepartmentByIdService = async (
   return res;
 };
 
+export const updateDepartmentByEventService = async (
+  payload: Partial<IAcademicDepartmentFromEvent>,
+): Promise<void> => {
+  await AcademicDepartment.findOneAndUpdate({ syncId: payload?.id }, payload, {
+    new: true,
+  });
+};
+
 export const deleteDepartmentByIdService = async (
   id: string,
 ): Promise<IAcademicDepartment | null> => {
@@ -112,4 +125,12 @@ export const deleteDepartmentByIdService = async (
     "academicFaculty",
   );
   return res;
+};
+
+export const deleteDepartmentByEventService = async (
+  payload: Partial<IAcademicDepartmentFromEvent>,
+): Promise<void> => {
+  await AcademicDepartment.findOneAndDelete({
+    syncId: payload?.id,
+  });
 };
