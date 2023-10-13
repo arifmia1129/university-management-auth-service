@@ -118,6 +118,24 @@ export const updateFacultyByIdService = async (
   return res;
 };
 
+export const updateFacultySyncIdService = async (
+  payload: any,
+): Promise<IFaculty | null> => {
+  const isExist = await Faculty.findOne({
+    id: payload.facultyId,
+  });
+
+  if (!isExist) {
+    throw new ApiError("Faculty not found by given id", httpStatus.NOT_FOUND);
+  }
+
+  const res = await Faculty.findOneAndUpdate({ _id: isExist._id }, payload, {
+    new: true,
+  });
+
+  return res;
+};
+
 export const deleteFacultyByIdService = async (
   id: string,
 ): Promise<IFaculty | null> => {

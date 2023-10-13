@@ -6,6 +6,7 @@ export const adminSearchableField = [
   "contactNo",
   "emergencyContactNo",
   "email",
+  "searchTerm",
 ];
 
 export const adminFilterableField = [
@@ -13,4 +14,5 @@ export const adminFilterableField = [
   "email",
   "contactNo",
   "emergencyContactNo",
+  "searchTerm",
 ];

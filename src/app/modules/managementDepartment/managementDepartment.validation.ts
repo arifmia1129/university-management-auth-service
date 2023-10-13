@@ -9,7 +9,9 @@ export const createManagementDepartmentValidation = z.object({
 });
 
 export const updateManagementDepartmentValidation = z.object({
-  title: z.string({
-    required_error: "Title is required",
+  body: z.object({
+    title: z.string({
+      required_error: "Title is required",
+    }),
   }),
 });

@@ -8,47 +8,41 @@ import subscribeEvents from "./app/events";
 
 let server: Server;
 
-process.on("uncaughtException", err => {
-  if (server) {
-    server.close(() => {
-      errorLogger.error(err);
-      process.exit(1);
-    });
-  } else {
-    errorLogger.error(err);
-    process.exit(1);
-  }
-});
-async function main() {
+async function connectToDatabase() {
   try {
-    await RedisClient.connect();
-    subscribeEvents();
     await mongoose.connect(config.db_url as string);
     infoLogger.info("DB Connected!");
+  } catch (error) {
+    errorLogger.error("Failed to connect to the database", error);
+    process.exit(1);
+  }
+}
 
+async function startServer() {
+  try {
     server = app.listen(config.port, () => {
       infoLogger.info(`Application is listening on port ${config.port}`);
     });
   } catch (error) {
-    errorLogger.error("Failed to connect database", error);
+    errorLogger.error("Failed to start the server", error);
+    process.exit(1);
   }
+}
 
-  process.on("unhandledRejection", err => {
-    if (server) {
-      server.close(() => {
-        errorLogger.error(err);
-        process.exit(1);
-      });
-    } else {
-      errorLogger.error(err);
-      process.exit(1);
-    }
-  });
+async function main() {
+  await RedisClient.connect();
+  subscribeEvents();
+  connectToDatabase();
+  startServer();
 }
 
 main();
 
 process.on("SIGTERM", () => {
   infoLogger.info("SIGTERM received");
-  process.exit(1);
+  if (server) {
+    server.close(() => {
+      process.exit(0); // Exit with code 0 to indicate a successful shutdown
+    });
+  }
 });

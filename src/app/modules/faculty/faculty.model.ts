@@ -19,6 +19,11 @@ export const facultySchema = new Schema<
         message: "ID must be 7 character",
       },
     },
+    syncId: {
+      type: String,
+      default: "",
+      unique: true,
+    },
     name: {
       firstName: {
         type: String,

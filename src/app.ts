@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // cors
-app.use(cors());
+app.use(cors({ credentials: true }));
 
 // router
 app.use("/api/v1", router);

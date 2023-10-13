@@ -5,6 +5,7 @@ import { IAcademicFaculty } from "../academicFaculty/academicFaculty.interface";
 
 export type IFaculty = {
   id: string;
+  syncId?: string;
   name: Name;
   designation: string;
   gender: "male" | "female" | "other";

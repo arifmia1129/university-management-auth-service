@@ -191,9 +191,8 @@ export const createAdminValidation = z.object({
         required_error: "Permanent address is required",
       }),
       bloodGroup: z
-        .enum([...bloodGroupEnum] as [string, ...string[]], {
-          required_error: "Blood group is required",
-        })
+        .string({ required_error: "Blood Group is required" })
+        .optional()
         .optional(),
       profileImage: z.string().url().optional(),
     }),
