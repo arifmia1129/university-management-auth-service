@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import config from "../config";
 
-const sendEmail = async (to: string, link: string) => {
+const sendEmail = async (name: string, to: string, link: string) => {
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -70,7 +70,7 @@ const sendEmail = async (to: string, link: string) => {
                 <h1>Password Reset</h1>
             </div>
             <div class='content'>
-                <p>Hello,</p>
+                <p>Hello ${name}</p>
                 <p>You've requested a password reset for your account. To reset your password, click the button below:</p>
                 <p><a class='button' href=${link}>Reset Password</a></p>
                 <p>If you didn't request this reset, please ignore this email. Your password won't be changed.</p>

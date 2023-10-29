@@ -166,6 +166,10 @@ export const forgotPasswordService = async (userId: string) => {
     profile = await Student.findOne({ id });
   }
 
+  if (!profile) {
+    throw new ApiError("Profile information not found", httpStatus.NOT_FOUND);
+  }
+
   const resetToken = await jwtHelper.createToken(
     { userId: id, role },
     config.jwt.secret as Secret,
@@ -173,7 +177,33 @@ export const forgotPasswordService = async (userId: string) => {
   );
 
   await sendEmail(
-    "arif.vtti@gmail.com",
+    profile?.name.firstName +
+      " " +
+      profile?.name.middleName +
+      " " +
+      profile?.name.lastName,
+    profile?.email as string,
     `http://localhost:5000/api/v1/reset-password?token=${resetToken}`,
   );
+};
+
+export const resetPassword = async (payload: any) => {
+  const { token, newPassword } = payload;
+
+  const { userId } = await jwtHelper.verifyAndDecodeToken(
+    token,
+    config.jwt.secret as string,
+  );
+  const isUserExist = await User.findOne({ id: userId });
+
+  if (!isUserExist) {
+    throw new ApiError("User not found", httpStatus.NOT_FOUND);
+  }
+
+  const newHashedPassword = await bcrypt.hash(
+    newPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
+
+  await User.updateOne({ id: userId }, { password: newHashedPassword });
 };

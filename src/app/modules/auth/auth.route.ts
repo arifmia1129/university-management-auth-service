@@ -13,6 +13,7 @@ authRouter.post(
   authController.loginAuth,
 );
 authRouter.post("/forgot-password", authController.forgotPasswordAuth);
+authRouter.post("/reset-password", authController.resetPasswordAuth);
 
 authRouter.get(
   "/refresh-token",

@@ -7,7 +7,7 @@ import httpStatus from "../../../shared/httpStatus";
 import sendResponse from "../../../shared/sendResponse";
 import config from "../../../config";
 import { LoginResponse, RefreshToken } from "./auth.interface";
-import { JwtPayload } from "jsonwebtoken";
+import { Jwt, JwtPayload } from "jsonwebtoken";
 
 export const loginAuth = catchAsync(async (req: Request, res: Response) => {
   const result = await authService.loginAuthService(req.body);
@@ -77,6 +77,25 @@ export const forgotPasswordAuth = catchAsync(
       statusCode: httpStatus.OK,
       success: true,
       message: "Send forgot password to your email",
+    });
+  },
+);
+export const resetPasswordAuth = catchAsync(
+  async (req: Request, res: Response) => {
+    const { newPassword } = req.body;
+    const token = req.headers.authorization;
+
+    const payload = {
+      newPassword,
+      token,
+    };
+
+    await authService.resetPassword(payload);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Successfully reset password",
     });
   },
 );

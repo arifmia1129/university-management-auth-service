@@ -21,6 +21,6 @@ export const verifyAndDecodeToken = (
     const decodedToken = jwt.verify(token, secret) as JwtPayload;
     return decodedToken;
   } catch (error) {
-    throw new ApiError("Invalid token", httpStatus.FORBIDDEN);
+    throw new ApiError("Invalid or expired token", httpStatus.FORBIDDEN);
   }
 };
