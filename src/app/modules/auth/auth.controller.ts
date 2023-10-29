@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response } from "express";
 import catchAsync from "../../../shared/catchAsync";
 import * as authService from "./auth.service";
@@ -64,6 +66,17 @@ export const changePasswordAuth = catchAsync(
       statusCode: httpStatus.OK,
       success: true,
       message: "Password updated successfully",
+    });
+  },
+);
+export const forgotPasswordAuth = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await authService.forgotPasswordService(req.body.userId);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Send forgot password to your email",
     });
   },
 );

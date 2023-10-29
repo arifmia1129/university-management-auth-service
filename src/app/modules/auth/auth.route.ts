@@ -12,6 +12,7 @@ authRouter.post(
   requestValidator(authValidation.loginAuthValidation),
   authController.loginAuth,
 );
+authRouter.post("/forgot-password", authController.forgotPasswordAuth);
 
 authRouter.get(
   "/refresh-token",
