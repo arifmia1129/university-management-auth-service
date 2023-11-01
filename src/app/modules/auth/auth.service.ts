@@ -183,7 +183,7 @@ export const forgotPasswordService = async (userId: string) => {
       " " +
       profile?.name.lastName,
     profile?.email as string,
-    `http://localhost:5000/api/v1/reset-password?token=${resetToken}`,
+    `http://localhost:3000/reset-password?token=${resetToken}`,
   );
 };
 

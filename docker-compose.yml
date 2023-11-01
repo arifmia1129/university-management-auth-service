@@ -1,0 +1,14 @@
+version: "3"
+services:
+  um_auth:
+    build: .
+    ports:
+      - "5001:5000" # Use a different host port
+    volumes:
+      - .:/code
+    environment:
+      - REDIS_URL=redis://redis:6379
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6380:6379" # Use different ports
